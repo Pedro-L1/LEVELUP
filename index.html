@@ -1,0 +1,889 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Level UP Gamer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      :root { --azul-electrico: #1E90FF; --verde-neon: #39FF14; }
+      body { font-family:'Roboto',sans-serif; background:#000; color:#fff; }
+      .navbar-brand, h1, h2, h3 { font-family:'Orbitron',sans-serif; color:var(--azul-electrico)!important; }
+      .btn-primary { background:var(--azul-electrico); border:none;}
+      .btn-primary:hover { background:var(--verde-neon); color:#000!important;}
+      .btn-neon { background:var(--verde-neon); color:#000; border:none; box-shadow:0 0 10px var(--verde-neon),0 0 20px var(--azul-electrico);}
+      .btn-neon:hover { background:var(--azul-electrico); color:#fff!important;}
+      .card { background:#1a1a1a; border:1px solid var(--azul-electrico); margin-bottom:20px;}
+      .card-title { color:var(--verde-neon);}
+      .whatsapp-floating { position:fixed; bottom:30px; right:30px; z-index:1000;}
+      .whatsapp-floating a { background:#25D366; width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 0 25px rgba(37,211,102,.5);}
+      .whatsapp-floating i { color:white; font-size:2rem;}
+      .whatsapp-floating:hover { transform:scale(1.1);}
+      .tooltip {visibility:hidden; background:rgba(0,0,0,.8); color:white; padding:5px 10px; border-radius:5px; position:absolute; right:70px; white-space:nowrap;}
+      .whatsapp-floating:hover .tooltip {visibility:visible;}
+      #toastContainer { position:fixed; top:20px; right:20px; z-index:1050;}
+      .toggle-password { cursor:pointer;}
+      .neon-section { box-shadow:0 0 20px var(--azul-electrico); }
+      .game-section { box-shadow:0 0 20px var(--verde-neon); }
+    </style>
+  </head>
+  <body>
+    <!-- Barra de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
+      <img src="assets/image/logoNew.png" alt="Logo" width="50" class="me-3">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">LEVEL UP <span class="logo_sub">GAMER</span> 🎮</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav me-auto">
+            <a class="nav-link active" href="#catalogo">Catálogo</a>
+            <a class="nav-link" href="#promociones">Promociones</a> 
+            <a class="nav-link" href="#blog">Blog</a>
+            <a class="nav-link" href="#eventos">Eventos</a>
+            <a class="nav-link" href="#contacto">Contacto</a>
+          </div>
+          <div class="d-flex align-items-center">
+            <button class="btn btn-primary position-relative me-2" data-bs-toggle="modal" data-bs-target="#carritoModal">
+              <i class="fas fa-shopping-cart"></i>
+              <span id="contadorCarrito" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+            </button>
+            <button class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+              <i class="fas fa-user-lock me-2"></i>Iniciar Sesión
+            </button>
+            <button class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#registroModal">
+              <i class="fas fa-user-plus me-2"></i>Registro
+            </button>
+            <button class="btn btn-outline-success ms-2" data-bs-toggle="modal" data-bs-target="#perfilModal">
+              <i class="fas fa-user-circle me-2"></i>Mi Perfil
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Notificaciones Toast -->
+    <div id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Inicio -->
+    <header class="bg-dark text-white text-center py-5 mt-5">
+      <h1>Bienvenido a Level UP Gamer 🎮</h1>
+      <p class="lead">Tu tienda de videojuegos y accesorios</p>
+      <a href="#catalogo" class="btn btn-primary btn-lg">Explorar Catálogo</a>
+    </header>
+
+    <!-- Origen e Impacto Mejorados - Versión Visual Mejorada -->
+    
+      <!-- ...Tu contenido de Origen e Impacto aquí... -->
+                 <!-- Origen e Impacto Mejorados - Versión Visual Mejorada -->
+<section class="container py-5" id="origen-impacto">
+  <div class="row g-4 align-items-stretch">
+    <!-- Origen -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100 shadow-lg border-custom neon-section" style="background: #141A28;">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <span class="display-6 me-2" style="color:var(--azul-electrico)">
+              <i class="fas fa-industry fa-2x"></i>
+            </span>
+            <h2 class="neon-title mb-0" style="color:var(--azul-electrico);">Origen de Productos</h2>
+          </div>
+          <p class="mb-3 text-white fs-5">Calidad y autenticidad garantizadas</p>
+          <h5 class="mb-3">
+            <span class="badge" style="background:var(--verde-neon); color:#000; font-size:1rem;">
+              Certificaciones Oficiales
+            </span>
+          </h5>
+          <ul class="list-group list-group-flush fs-6">
+            <li class="list-group-item bg-transparent text-white border-0">
+              <i class="fas fa-check-circle text-success me-1"></i> Sony Interactive Entertainment
+            </li>
+            <li class="list-group-item bg-transparent text-white border-0">
+              <i class="fas fa-check-circle text-success me-1"></i> Microsoft Xbox
+            </li>
+            <li class="list-group-item bg-transparent text-white border-0">
+              <i class="fas fa-check-circle text-success me-1"></i> Nintendo Co., Ltd.
+            </li>
+            <li class="list-group-item bg-transparent text-white border-0">
+              <i class="fas fa-check-circle text-success me-1"></i> SteelSeries
+            </li>
+          </ul>
+          <div class="mt-3">
+            <span class="badge bg-info text-dark me-1">Distribución Oficial</span>
+            <span class="badge bg-primary">Producto Original</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Impacto Comunitario -->
+    <div class="col-lg-6 mb-4">
+      <div class="card h-100 shadow-lg border-custom neon-section" style="background: #181825;">
+        <div class="card-body text-center">
+          <div class="d-flex justify-content-center align-items-center mb-3">
+            <span class="display-6 me-2" style="color:var(--verde-neon)">
+              <i class="fas fa-users fa-2x"></i>
+            </span>
+            <h2 class="neon-title mb-0" style="color:var(--verde-neon);">Impacto Comunitario</h2>
+          </div>
+          <p class="fs-5 text-white mb-4">
+            Tus compras <span style="color:var(--verde-neon); font-weight:bold;">impulsan la comunidad gamer</span>.
+          </p>
+          <div class="row g-2 justify-content-center mb-3">
+            <div class="col-6 text-center">
+              <div class="py-3 px-2 rounded bg-dark border border-success shadow-sm">
+                <div class="fs-2 text-success mb-1">
+                  <i class="fas fa-calendar-check"></i> +1,200
+                </div>
+                <div class="text-white">Eventos apoyados</div>
+              </div>
+            </div>
+            <div class="col-6 text-center">
+              <div class="py-3 px-2 rounded bg-dark border border-info shadow-sm">
+                <div class="fs-2 text-info mb-1">
+                  <i class="fas fa-money-bill-wave"></i> $2.5M
+                </div>
+                <div class="text-white">Invertidos en comunidad</div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3">
+            <span class="badge bg-success me-1">¡Gracias por ser parte!</span>
+            <span class="badge bg-warning text-dark">Apoya el mundo gamer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+      
+    </section>
+
+    <!-- Oferta del Mes -->
+   
+       <section class="container py-5">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card shadow-lg border-custom h-100">
+        <div class="card-body d-flex flex-column">
+          <div class="row align-items-center flex-grow-1">
+            <div class="col-md-6">
+              <img src="assets/image/Teclado_Inspire_Smart_TI707.jpg" class="img-fluid" alt="Teclado Inalámbrico">
+            </div>
+            <div class="col-md-6 text-white">
+              <h3 class="card-title">Oferta del Mes: Teclado Inalámbrico</h3>
+              <p class="card-text">El Teclado Multidispositivo Inalámbrico Inspire Smart TI707 es la solución perfecta para quienes buscan versatilidad y
+                 comodidad. Equipado con tecnología de 2.4 MHz y dos modos Bluetooth, este teclado se adapta fácilmente a tu Smart TV y otros dispositivos,
+                  ofreciendo una experiencia de uso sin interrupciones. Su diseño elegante en negro incluye un touchpad integrado y botones izquierdo-derecho,
+                   junto con controles multimedia, brindando un control total en la palma de tu mano. Con baterías AAA incluidas, 
+                   el TI707 está listo para ofrecerte rendimiento de élite en cualquier entorno.</p>
+              <p class="card-text" style="color: #00F7FF;">$85.990</p>
+              <a href="#" class="btn btn-primary btn-comprar" data-id="oferta-teclado" data-nombre="Teclado Inalámbrico" data-precio="49990">Agregar al Carrito</a>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-3">
+              <img src="assets/image/teclado1.webp" class="img-fluid" alt="Teclado Inalámbrico 1">
+            </div>
+            <div class="col-md-3">
+              <img src="assets/image/teclado2.webp" class="img-fluid" alt="Teclado Inalámbrico 2">
+            </div>
+              <div class="col-md-3">
+              <img src="assets/image/teclado4.webp" class="img-fluid" alt="Teclado Inalámbrico 3">
+            </div>
+            <div class="col-md-3">
+              <img src="assets/image/teclado3.webp" class="img-fluid" alt="Teclado Inalámbrico 3">
+            </div>
+           
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+      
+   
+
+    <!-- Catálogo -->
+    <section id="catalogo" class="py-4">
+  <div class="container">
+    <h2 class="mb-4" style="color:var(--azul-electrico);">Catálogo de la tienda</h2>
+    <div class="row mb-4">
+      <div class="col-12 col-md-6 mx-auto">
+        <input 
+          type="text" 
+          id="buscadorCatalogo" 
+          class="form-control" 
+          placeholder="Buscar productos..."
+          style="background:#e9e6e6; color:#fff; border:1px solid var(--azul-electrico);"
+        >
+      </div>
+    </div>
+    <div class="row g-4">
+      <!-- Producto 1 -->
+      <div class="col-md-4 d-flex align-items-stretch mb-4">
+        <div class="card h-100 w-100">
+          <div class="ratio ratio-4x3">
+            <img src="assets/image/catan.webp" class="card-img-top" alt="Catan">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Catan 🎲</h5>
+            <p class="card-text" style="color:#D3D3D3">
+              <strong>Descripción:</strong> Clásico juego de estrategia donde los jugadores compiten por colonizar y expandirse en la isla de Catan. Ideal para 3-4 jugadores y perfecto para noches de juego en familia o con amigos.
+            </p>
+            <p class="card-text" style="color:#00F7FF;">$29.990</p>
+            <a href="#" class="btn btn-primary btn-comprar" data-id="producto1" data-nombre="Catan" data-precio="29990">Comprar</a>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 2 -->
+      <div class="col-md-4 d-flex align-items-stretch mb-4">
+        <div class="card h-100 w-100">
+          <div class="ratio ratio-4x3">
+            <img src="assets/image/carcassonne.webp" class="card-img-top" alt="Carcassonne">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Carcassonne 🎲</h5>
+            <p class="card-text" style="color:#D3D3D3">
+              <strong>Descripción:</strong> Un juego de colocación de fichas donde los jugadores construyen el paisaje alrededor de la fortaleza medieval de Carcassonne. Ideal para 2-5 jugadores y fácil de aprender.
+            </p>
+            <p class="card-text" style="color:#00F7FF;">$24.990</p>
+            <a href="#" class="btn btn-primary btn-comprar" data-id="producto2" data-nombre="Carcassonne" data-precio="24990">Comprar</a>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 3 -->
+      <div class="col-md-4 d-flex align-items-stretch mb-4">
+        <div class="card h-100 w-100">
+          <div class="ratio ratio-4x3">
+            <img src="assets/image/Controlador Inalámbrico Xbox Series X.webp" class="card-img-top" alt="Control Xbox Series X">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Control Xbox Series X 🎮</h5>
+            <p class="card-text" style="color:#D3D3D3">
+              <strong>Descripción:</strong> Ofrece una experiencia de juego cómoda con botones mapeables y una respuesta táctil mejorada. Compatible con consolas Xbox y PC.
+            </p>
+            <p class="card-text" style="color:#00F7FF;">$59.990</p>
+            <a href="#" class="btn btn-primary btn-comprar" data-id="producto3" data-nombre="Control Xbox Series X" data-precio="59990">Comprar</a>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 4 -->
+      <div class="col-md-4 d-flex align-items-stretch mb-4">
+        <div class="card h-100 w-100">
+          <div class="ratio ratio-4x3">
+            <img src="assets/image/D_NQ_NP_2X_883946-MLA79964406701_102024-F.webp" class="card-img-top" alt="Play Station 5">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Play Station 5 🕹️</h5>
+            <p class="card-text" style="color:#D3D3D3">
+              <strong>Descripción:</strong> La consola de última generación de Sony, que ofrece gráficos impresionantes y tiempos de carga ultrarrápidos para una experiencia de juego inmersiva.
+            </p>
+            <p class="card-text" style="color:#00F7FF;">$549.990</p>
+            <a href="#" class="btn btn-primary btn-comprar" data-id="producto4" data-nombre="Play Station 5" data-precio="549990">Comprar</a>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 5 -->
+      <div class="col-md-4 d-flex align-items-stretch mb-4">
+        <div class="card h-100 w-100">
+          <div class="ratio ratio-4x3">
+            <img src="assets/image/Auriculares-gamer_HyperX Cloud II.jpg" class="card-img-top" alt="Auriculares HyperX Cloud II">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Auriculares Gamer HyperX Cloud II 🎧</h5>
+            <p class="card-text" style="color:#D3D3D3">
+              <strong>Descripción:</strong> Proporcionan un sonido envolvente de calidad con un micrófono desmontable y almohadillas de espuma viscoelástica para mayor comodidad durante largas sesiones de juego.
+            </p>
+            <p class="card-text" style="color:#00F7FF;">$79.990</p>
+            <a href="#" class="btn btn-primary btn-comprar" data-id="producto5" data-nombre="Auriculares HyperX Cloud II" data-precio="79990">Comprar</a>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 6 -->
+      <div class="col-md-4 d-flex align-items-stretch mb-4">
+        <div class="card h-100 w-100">
+          <div class="ratio ratio-4x3">
+            <img src="assets/image/Asus Rog Strix Scar 15 Gaming Laptop-15.6.jpg" class="card-img-top" alt="Asus Rog Strix Scar 15">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Asus Rog Strix Scar 15 Gaming Laptop 💻</h5>
+            <p class="card-text" style="color:#D3D3D3">
+              <strong>Descripción:</strong> Potente laptop para juegos con procesador Intel i7, tarjeta gráfica NVIDIA RTX 3060 y pantalla de 15.6" Full HD a 300Hz para una experiencia de juego fluida y de alta calidad.
+            </p>
+            <p class="card-text" style="color:#00F7FF;">$1.299.990</p>
+            <a href="#" class="btn btn-primary btn-comprar" data-id="producto6" data-nombre="Asus Rog Strix Scar 15" data-precio="1299990">Comprar</a>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 7 -->
+      <div class="col-md-4 d-flex align-items-stretch mb-4">
+        <div class="card h-100 w-100">
+          <div class="ratio ratio-4x3">
+            <img src="assets/image/Secretlab Titan Evo Frost -Silla Gamer.jpg" class="card-img-top" alt="Secretlab Titan Evo Frost">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Secretlab Titan Evo Frost 💺</h5>
+            <p class="card-text" style="color:#D3D3D3">
+              <strong>Descripción:</strong> Silla gamer diseñada para el máximo confort, con soporte ergonómico y personalización ajustable para sesiones prolongadas.
+            </p>
+            <p class="card-text" style="color:#00F7FF;">$349.990</p>
+            <a href="#" class="btn btn-primary btn-comprar" data-id="producto7" data-nombre="Secretlab Titan Evo Frost" data-precio="349990">Comprar</a>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 8 -->
+      <div class="col-md-4 d-flex align-items-stretch mb-4">
+        <div class="card h-100 w-100">
+          <div class="ratio ratio-4x3">
+            <img src="assets/image/Mouse Gamer Logitech G502 HERO.webp" class="card-img-top" alt="Mouse Logitech G502 HERO">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Mouse Gamer Logitech G502 HERO 🖱️</h5>
+            <p class="card-text" style="color:#D3D3D3">
+              <strong>Descripción:</strong> Mouse gamer de alta precisión con sensor HERO 25K, 11 botones programables y retroiluminación RGB personalizable.
+            </p>
+            <p class="card-text" style="color:#00F7FF;">$49.990</p>
+            <a href="#" class="btn btn-primary btn-comprar" data-id="producto8" data-nombre="Mouse Logitech G502 HERO" data-precio="49990">Comprar</a>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 9 -->
+      <div class="col-md-4 d-flex align-items-stretch mb-4">
+        <div class="card h-100 w-100">
+          <div class="ratio ratio-4x3">
+            <img src="assets/image/Mousepad Razer Goliathus Extended Chroma.webp" class="card-img-top" alt="Mousepad Razer Goliathus Extended Chroma">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Mousepad Razer Goliathus Extended Chroma 👾</h5>
+            <p class="card-text" style="color:#D3D3D3">
+              <strong>Descripción:</strong> Mousepad extendido con iluminación RGB personalizable, superficie optimizada para sensores ópticos y láser, y base antideslizante.
+            </p>
+            <p class="card-text" style="color:#00F7FF;">$29.990</p>
+            <a href="#" class="btn btn-primary btn-comprar" data-id="producto9" data-nombre="Mousepad Razer Goliathus Extended Chroma" data-precio="29990">Comprar</a>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 10 -->
+      <div class="col-md-4 d-flex align-items-stretch mb-4">
+        <div class="card h-100 w-100">
+          <div class="ratio ratio-4x3">
+            <img src="assets/image/PoleraLevelUP.jpg" class="card-img-top" alt="Polera Level UP Gamer">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Polera Level UP Gamer 👕</h5>
+            <p class="card-text" style="color:#D3D3D3">
+              <strong>Descripción:</strong> Polera de algodón 100% con diseño exclusivo de Level UP Gamer, cómoda y duradera.
+            </p>
+            <p class="card-text" style="color:#00F7FF;">$19.990</p>
+            <a href="#" class="btn btn-primary btn-comprar" data-id="producto10" data-nombre="Polera Level UP Gamer" data-precio="19990">Comprar</a>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 11 -->
+      <div class="col-md-4 d-flex align-items-stretch mb-4">
+        <div class="card h-100 w-100">
+          <div class="ratio ratio-4x3">
+            <img src="assets/image/Refrigeración Liquida Cougar Poseidon Elite ARGB 240-Black1.webp" class="card-img-top" alt="Refrigeración Líquida Cougar Poseidon Elite ARGB 240">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Refrigeración Liquida Cougar Poseidon Elite ARGB 240-Black ❄️</h5>
+            <p class="card-text" style="color:#D3D3D3">
+              <strong>Descripción:</strong> Sistema de refrigeración líquida para CPU con radiador de 240mm, iluminación ARGB personalizable y bomba de alta eficiencia.
+            </p>
+            <p class="card-text" style="color:#00F7FF;">$70.990</p>
+            <a href="#" class="btn btn-primary btn-comprar" data-id="producto11" data-nombre="Refrigeración Líquida Cougar Poseidon Elite ARGB 240" data-precio="70990">Comprar</a>
+          </div>
+        </div>
+      </div>
+      <!-- Producto 12 -->
+      <div class="col-md-4 d-flex align-items-stretch mb-4">
+        <div class="card h-100 w-100">
+          <div class="ratio ratio-4x3">
+            <img src="assets/image/Monitor Gamer Xiaomi G34″, WQi, 180Hz.webp" class="card-img-top" alt="Monitor Gamer Xiaomi G34, WQi, 180Hz">
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Monitor Gamer Xiaomi G34, WQi, 180Hz 🖥️</h5>
+            <p class="card-text" style="color:#D3D3D3">
+              <strong>Descripción:</strong> Monitor ultrawide de 34" con resolución WQHD, tasa de refresco de 180Hz y tiempo de respuesta de 3ms, ideal para una experiencia de juego inmersiva y fluida.
+            </p>
+            <p class="card-text" style="color:#00F7FF;">$295.990</p>
+            <a href="#" class="btn btn-primary btn-comprar" data-id="producto12" data-nombre="Monitor Gamer Xiaomi G34, WQi, 180Hz" data-precio="295990">Comprar</a>
+          </div>
+        </div>
+      </div>
+      <!-- Fin catálogo -->
+    </div>
+  </div>
+</section>
+     
+
+    <!-- Promociones -->
+    <section id="promociones" class="bg-light py-5">
+      <div class="container">
+        <div id="carouselPromociones" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+          <!-- Indicadores -->
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselPromociones" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Elden Ring"></button>
+            <button type="button" data-bs-target="#carouselPromociones" data-bs-slide-to="1" aria-label="EA Sports FC 26"></button>
+            <button type="button" data-bs-target="#carouselPromociones" data-bs-slide-to="2" aria-label="Zelda"></button>
+          </div>
+          <div class="carousel-inner">
+            <!-- Promoción 1 -->
+            <div class="carousel-item active">
+              <a href="promo-elden-ring.html">
+                <img src="assets/image/elden-ring.webp" class="d-block w-100" alt="Elden Ring" loading="lazy">
+              </a>
+              <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                <h5 class="text-light">Elden Ring</h5>
+                <p class="text-light">¡Descuento especial en Elden Ring! Solo por tiempo limitado.</p>
+              </div>
+            </div>
+            <!-- Promoción 2 -->
+            <div class="carousel-item">
+              <a href="promo-ea-sports-fc-26.html">
+                <img src="assets/image/ea-sports-fc-26.webp" class="d-block w-100" alt="EA Sports FC 26" loading="lazy">
+              </a>
+              <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                <h5 class="text-light">EA Sports FC 26</h5>
+                <p class="text-light">¡Prepárate para el próximo torneo! Aprovecha la promoción.</p>
+              </div>
+            </div>
+            <!-- Promoción 3 -->
+            <div class="carousel-item">
+              <a href="promo-zelda-botw.html">
+                <img src="assets/image/SI_WiiU_TheLegendOfZeldaBreathOfTheWild_.jpg" class="d-block w-100" alt="The Legend of Zelda: Breath of the Wild" loading="lazy">
+              </a>
+              <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                <h5 class="text-light">The Legend of Zelda: Breath of the Wild</h5>
+                <p class="text-light">Explora Hyrule con nuestra oferta exclusiva en este clásico.</p>
+              </div>
+            </div>
+          </div>
+          <!-- Controles -->
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselPromociones" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselPromociones" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog -->
+    
+        <!-- Blog -->
+    <section id="blog" class="py-5 game-section">
+      <div class="container">
+        <h2 class="section-title">📰 ÚLTIMAS NOTICIAS GAMER</h2>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="blog-card">
+              <div class="card-header">
+                <span class="badge bg-neon">Novedades</span>
+                <img src="assets/image/setup.avif" alt="Setup Gamer" class="img-fluid rounded-top">
+              </div>
+              <div class="card-body">
+                <h3>Guía Definitiva para tu Setup</h3>
+                <p>Aprende a optimizar tu espacio de juego...</p>
+                <div class="card-footer">
+                  <a href="https://www.hp.com/cl-es/shop/tech-takes/guia-setup-gaming-profesional" class="btn btn-neon" target="_blank">Leer más <i class="fas fa-arrow-right"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="blog-card shadow-sm">
+              <div class="card-header position-relative">
+                <span class="badge bg-neon"></span>
+                <img src="assets/image/gta-6.webp" alt="Tráiler de GTA 6" class="img-fluid rounded-top trailer-img" width="200" height="auto">
+              </div>
+              <div class="card-body">
+                <h3 class="card-title">¡Mira el Tráiler de GTA 6!</h3>
+                <p class="card-text">No te pierdas el emocionante tráiler de GTA 6. Prepárate para la próxima aventura en el mundo de Rockstar.</p>
+              </div>
+              <div class="card-footer d-flex justify-content-between align-items-center">
+                <a href="https://www.rockstargames.com/VI" class="btn btn-neon" target="_blank">Ver Tráiler <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección Eventos -->
+    <section id="eventos" class="py-5 neon-section">
+      <div class="container">
+        <h2 class="section-title">🗺️ EVENTOS GAMER</h2>
+        <p>Torneo de FIFA 25 ¡Premios en efectivo y consolas!</p>
+        <div class="map-container">
+          <div id="map" style="height: 500px; border:3px solid var(--azul-electrico); border-radius:15px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class="py-4">
+      <div class="container text-center">
+        <h2>📩 Contacto</h2>
+        <p>Deja tu mensaje y te responderemos pronto</p>
+        <form id="formContacto">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">🚀 Tu Nombre</label>
+            <input type="text" class="form-control" id="nombre" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">📧 Email</label>
+            <input type="email" class="form-control" id="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="mensaje" class="form-label">💡 Escribe tu Mensaje...</label>
+            <textarea class="form-control" id="mensaje" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Modals (Carrito, Login, Registro, Perfil, Recuperación) -->
+          <!-- Modal Carrito -->
+    <div class="modal fade" id="carritoModal">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark text-white">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title">🛒 Carrito de Compras</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div id="carritoItems" class="mb-3"></div>
+            <h5>Total: $<span id="totalCarrito">0</span></h5>
+            <p id="totalDescuento" style="color:var(--verde-neon)"></p>
+          </div>
+          <div class="modal-footer border-secondary">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-danger" id="vaciarCarritoBtn">Vaciar Carrito</button>
+            <button type="button" class="btn btn-success" id="finalizarCompraBtn">Finalizar Compra</button>
+          </div>
+        </div>
+      </div>
+    </div>
+          
+    <div class="modal fade" id="registroModal" aria-labelledby="registroModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white rounded-3 border border-secondary shadow-lg">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="registroModalLabel">
+          <i class="fas fa-user-plus text-success me-2"></i> Registro Gamer
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body px-4">
+        <form id="registroForm">
+          <div class="mb-3">
+            <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento <span class="badge bg-info">dd/mm/yyyy</span></label>
+            <input type="text" class="form-control bg-transparent text-white border-info" id="fechaNacimiento" required placeholder="dd/mm/yyyy" maxlength="10" pattern="\d{2}/\d{2}/\d{4}">
+            <div id="fechaNacimientoHelp" class="form-text text-white">Ejemplo: 11/09/2000</div>
+          </div>
+          <div class="mb-3">
+            <label for="emailRegistro" class="form-label">
+              Correo <span class="badge bg-success">@duoc.cl</span>
+            </label>
+            <input type="email" class="form-control bg-transparent text-white border-info" id="emailRegistro" required aria-describedby="emailHelp">
+            <div id="emailHelp" class="form-text text-white">
+              Si usas tu correo <span class="text-success fw-bold">@duoc.cl</span> obtienes <span class="badge bg-success">20% de descuento</span>.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">
+              Contraseña <span class="text-muted">(mínimo 8 caracteres)</span>
+            </label>
+            <input type="password" class="form-control bg-transparent text-white border-info" id="password" minlength="8" required aria-describedby="passwordHelp">
+            <div id="passwordHelp" class="form-text text-white">
+              Tu contraseña debe tener al menos <strong>8 caracteres</strong>.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+            <input type="password" class="form-control bg-transparent text-white border-info" id="confirmPassword" minlength="8" required aria-describedby="confirmHelp">
+            <div id="confirmHelp" class="form-text text-white">
+              Por favor, confirma tu contraseña.
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success w-100 fw-bold py-2">Registrarse</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+        <!-- Modal Login Mejorado (todas las palabras en blanco) -->
+<style>
+  /* Fuerza texto blanco en todo el modal de login */
+  #loginModal * {
+    color: #fff !important;
+  }
+  #loginModal .form-text a {
+    color: #fff !important;
+    text-decoration: underline;
+  }
+  #loginModal .form-label {
+    color: #fff !important;
+  }
+  #loginModal .input-group-text {
+    color: #fff !important;
+    background: #181818 !important;
+    border-color: #1E90FF !important;
+  }
+  #loginModal .text-muted {
+    color: #fff !important;
+  }
+</style>
+
+<div class="modal fade" id="loginModal" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white rounded-3 border border-secondary shadow-lg">
+      <div class="modal-header border-secondary">
+        <h2 class="modal-title fs-5" id="loginModalLabel">
+          <i class="fas fa-user-lock text-primary me-2"></i> Unete a nosotros
+        </h2>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body px-4">
+        <form id="loginForm" novalidate>
+          <div class="mb-4">
+            <label for="loginEmail" class="form-label small">Correo Usuario</label>
+            <div class="input-group">
+              <span class="input-group-text bg-dark border-secondary">
+                <i class="fas fa-envelope"></i>
+              </span>
+              <input type="email" 
+                class="form-control bg-dark text-white border-secondary" 
+                id="loginEmail" 
+                pattern="[a-z0-9._%+-]+@duoc\.cl$"
+                required
+                aria-describedby="loginEmailHelp">
+            </div>
+            <div id="loginEmailHelp" class="form-text">
+              Si no tienes cuenta, <a href="#" class="fw-bold" data-bs-toggle="modal" data-bs-target="#registroModal" data-bs-dismiss="modal">regístrate aquí</a>.
+            </div>
+          </div>
+          <div class="mb-4">
+            <div class="d-flex justify-content-between">
+              <label for="loginPassword" class="form-label small">Contraseña</label>
+              <a href="#" class="text-decoration-none small fw-bold ms-auto" data-bs-toggle="modal" data-bs-target="#recoveryModal" data-bs-dismiss="modal">
+                ¿Olvidó su contraseña?
+              </a>
+            </div>
+            <div class="input-group">
+              <span class="input-group-text bg-dark border-secondary">
+                <i class="fas fa-lock"></i>
+              </span>
+              <input type="password" 
+                class="form-control bg-dark text-white border-secondary" 
+                id="loginPassword" 
+                minlength="8"
+                required
+                aria-describedby="loginPasswordHelp">
+            </div>
+            <div id="loginPasswordHelp" class="form-text">
+              Mínimo <strong>8 caracteres</strong>.
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">
+            <span class="submit-text">Ingresar</span>
+            <div class="spinner-border spinner-border-sm d-none" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Recuperación de Contraseña Mejorado -->
+<div class="modal fade" id="recoveryModal" aria-labelledby="recoveryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white rounded-3 border border-secondary shadow-lg">
+      <div class="modal-header border-secondary">
+        <h2 class="modal-title fs-5" id="recoveryModalLabel">
+          <i class="fas fa-key text-primary me-2"></i> Recuperar Contraseña
+        </h2>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body px-4">
+        <form id="recoveryForm" novalidate>
+          <div class="mb-4">
+            <label for="recoveryEmail" class="form-text text-white">
+              Correo de recuperacion
+            </label>
+            <div class="input-group">
+              <span class="input-group-text bg-dark border-secondary">
+                <i class="fas fa-envelope text-muted"></i>
+              </span>
+              <input type="email"
+                class="form-control bg-dark text-white border-secondary"
+                id="recoveryEmail"
+                pattern="[a-z0-9._%+-]+@duoc\.cl$"
+                required
+                aria-describedby="recoveryEmailHelp">
+            </div>
+            <div id="recoveryEmailHelp" class="form-text text-white">
+              
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">
+            <span class="submit-text">Enviar Instrucciones</span>
+            <div class="spinner-border spinner-border-sm d-none" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </button> <!--inPassword" class="form-label small text-muted">Contraseña--></label>
+              <a href="#" class="text-decoration-none small text-info fw-bold" data-bs-toggle="modal" data-bs-target="#recoveryModal" data-bs-dismiss="modal">
+               
+              </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Estilos extra para neon y bordes personalizados -->
+<style>
+  .btn-neon {
+    background: var(--verde-neon, #39FF14)!important;
+    color: #000!important;
+    border: none;
+    font-family: 'Orbitron',sans-serif;
+    box-shadow: 0 0 10px var(--verde-neon, #39FF14),0 0 20px var(--azul-electrico, #1E90FF);
+  }
+  .btn-neon:hover {
+    background: var(--azul-electrico, #1E90FF)!important;
+    color: #fff!important;
+  }
+  .border-neon {
+    border: 2px solid var(--azul-electrico, #1E90FF)!important;
+    box-shadow: 0 0 16px var(--azul-electrico, #1E90FF),0 0 8px var(--verde-neon, #39FF14);
+  }
+  .text-neon { color: var(--verde-neon, #39FF14)!important; }
+  .btn-outline-neon {
+    border: 1px solid var(--verde-neon, #39FF14)!important;
+    color: var(--verde-neon, #39FF14)!important;
+    background: transparent;
+  }
+  .btn-outline-neon:hover {
+    background: var(--verde-neon, #39FF14)!important;
+    color: #000!important;
+  }
+</style>
+
+     <!-- Modal Perfil Mejorado -->
+<div class="modal fade" id="perfilModal" aria-labelledby="perfilModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content bg-dark text-white rounded-3 border border-secondary shadow-lg">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="perfilModalLabel">👤 Mi Perfil Gamer</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="perfilForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Nombre Completo</label>
+              <input type="text" class="form-control bg-transparent text-white border-info" id="perfilNombre" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Teléfono</label>
+              <input type="tel" class="form-control bg-transparent text-white border-info" id="perfilTelefono" pattern="[0-9]{9}">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-control bg-transparent text-white border-info" id="perfilCorreo" disabled>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Fecha de Nacimiento <span class="badge bg-info">dd/mm/yyyy</span></label>
+              <input type="text" class="form-control bg-transparent text-white border-info" id="perfilFechaNacimiento" maxlength="10" pattern="\d{2}/\d{2}/\d{4}">
+              <div class="form-text text-white">Ejemplo: 11/09/2000</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">País</label>
+              <select class="form-select bg-transparent text-white border-info" id="perfilPais">
+                <option value="CL">Chile</option>
+                <option value="AR">Argentina</option>
+                <option value="PE">Perú</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success mt-4 w-100">Guardar Cambios</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+    <!-- ...Pega todos tus modals aquí, igual que antes... -->
+
+    <!-- Footer Mejorado -->
+    <footer class="bg-dark text-white pt-4 pb-2 mt-5" role="contentinfo" aria-label="Pie de página">
+      <div class="container">
+        <div class="row align-items-center">
+          <!-- Logo -->
+          <div class="col-md-4 mb-3 mb-md-0 text-md-start">
+            <img src="assets/image/logoNew.png" alt="Level UP Game" style="height:40px;">
+          </div>
+          <!-- Enlaces -->
+          <div class="col-md-4 mb-3 mb-md-0">
+            <a href="privacidad.html" class="text-white me-3 text-decoration-none">Privacidad</a>
+            <a href="contacto.html" class="text-white me-3 text-decoration-none">Contacto</a>
+            <a href="terminos.html" class="text-white text-decoration-none">Términos</a>
+          </div>
+          <!-- Redes sociales -->
+          <div class="col-md-4 text-md-end">
+            <a href="https://facebook.com/" target="_blank" class="text-white me-2" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://instagram.com/" target="_blank" class="text-white me-2" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="https://discord.com/" target="_blank" class="text-white me-2" aria-label="Discord"><i class="bi bi-discord"></i></a>
+            <a href="https://youtube.com/" target="_blank" class="text-white" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+          </div>
+        </div>
+        <hr class="border-light my-3">
+        <div class="row">
+          <div class="col text-center small">
+            <p class="mb-0">&copy; <span id="year"></span> Level UP Game. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- Script para año automático -->
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+
+    <!-- WhatsApp Floating Button -->
+    <div class="whatsapp-floating">
+      <a href="https://wa.me/56937366485" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+        <span class="tooltip">Soporte Técnico</span>
+      </a>
+    </div>
+
+    <!-- Bootstrap JS + Leaflet JS + Script app.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      // Mapa eventos
+      const map = L.map('map').setView([-33.45694, -70.64827], 13);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      L.marker([-33.45694, -70.64827])
+        .addTo(map)
+        .bindPopup('Torneo FIFA 2025<br>25 Septiembre')
+        .openPopup();
+    </script>
+    <script src="assets/scripts/app.js"></script>
+  </body>
+</html>
