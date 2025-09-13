@@ -1,0 +1,114 @@
+// ================ GESTIÓN DE USUARIOS ================
+const users = JSON.parse(localStorage.getItem('users')) || [];
+
+function registrarUsuario(email, password) {
+    if(users.find(u => u.email === email)) {
+        Swal.fire('Error', 'El correo ya está registrado', 'error');
+        return false;
+    }
+    users.push({ 
+        email, 
+        password,
+        carrito: [],
+        registro: new Date().toISOString() 
+    });
+    localStorage.setItem('users', JSON.stringify(users));
+    return true;
+}
+
+// ================ GESTIÓN DEL CARRITO ================
+let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+function agregarAlCarrito(producto) {
+    const itemExistente = carrito.find(item => item.id === producto.id);
+    itemExistente ? itemExistente.cantidad++ : carrito.push({...producto, cantidad: 1});
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    actualizarCarritoUI();
+}
+
+function vaciarCarrito() {
+    carrito = [];
+    localStorage.removeItem('carrito');
+    actualizarCarritoUI();
+}
+
+// ================ INTERFAZ DE USUARIO ================
+function actualizarCarritoUI() {
+    // Contador
+    const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+    document.getElementById('contadorCarrito').textContent = totalItems;
+    
+    // Modal
+    const carritoItems = document.getElementById('carritoItems');
+    const totalCarrito = document.getElementById('totalCarrito');
+    
+    let html = '';
+    let total = 0;
+    
+    carrito.forEach(item => {
+        const subtotal = item.precio * item.cantidad;
+        total += subtotal;
+        html += `
+            <div class="cart-item d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h6>${item.nombre}</h6>
+                    <small>Cantidad: ${item.cantidad}</small>
+                </div>
+                <div>
+                    <span>$${subtotal.toLocaleString('es-CL')}</span>
+                    <button class="btn btn-sm btn-danger ms-2" onclick="eliminarDelCarrito('${item.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    carritoItems.innerHTML = html || '<p>El carrito está vacío</p>';
+    totalCarrito.textContent = total.toLocaleString('es-CL');
+}
+
+function eliminarDelCarrito(productId) {
+    carrito = carrito.filter(item => item.id !== productId);
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    actualizarCarritoUI();
+}
+
+// ================ EVENTOS ================
+document.addEventListener('DOMContentLoaded', () => {
+    // Botones de compra
+    document.querySelectorAll('.btn-comprar').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const producto = {
+                id: e.target.dataset.id,
+                nombre: e.target.dataset.nombre,
+                precio: parseInt(e.target.dataset.precio)
+            };
+            agregarAlCarrito(producto);
+            Swal.fire('¡Agregado!', `${producto.nombre} se añadió al carrito`, 'success');
+        });
+    });
+
+    // Formulario de registro
+    document.getElementById('registroForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('emailRegistro').value;
+        const password = Math.random().toString(36).slice(-8); // Contraseña temporal
+        
+        if(registrarUsuario(email, password)) {
+            Swal.fire('¡Registro exitoso!', 'Revisa tu correo para la contraseña temporal', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('registroModal')).hide();
+        }
+    });
+
+    // Botones del carrito
+    document.getElementById('vaciarCarritoBtn').addEventListener('click', vaciarCarrito);
+    document.getElementById('finalizarCompraBtn').addEventListener('click', () => {
+        Swal.fire('¡Compra exitosa!', 'Gracias por tu compra', 'success');
+        vaciarCarrito();
+    });
+
+    // Inicializar carrito
+    actualizarCarritoUI();
+});

@@ -1,0 +1,352 @@
+// =============== PRODUCTOS ==============
+const productos = [
+  { id: "JM001", categoria: "Juegos de Mesa", nombre: "Catan", precio: 29990, descripcion: "Un clásico juego de estrategia...", imagen: "assets/image/catan.webp" },
+  { id: "JM002", categoria: "Juegos de Mesa", nombre: "Carcassonne", precio: 24990, descripcion: "Un juego de colocación de fichas...", imagen: "assets/image/carcassonne.webp" },
+  { id: "AC001", categoria: "Accesorios", nombre: "Controlador Inalámbrico Xbox Series X", precio: 59990, descripcion: "Experiencia de juego cómoda...", imagen: "assets/image/Controlador Inalámbrico Xbox Series X.webp" },
+  { id: "AC002", categoria: "Accesorios", nombre: "Auriculares Gamer HyperX Cloud II", precio: 79990, descripcion: "Sonido envolvente...", imagen: "assets/image/Auriculares-gamer_HyperX Cloud II.jpg" },
+  { id: "CO001", categoria: "Consolas", nombre: "PlayStation 5", precio: 549990, descripcion: "Consola de última generación...", imagen: "assets/image/D_NQ_NP_2X_883946-MLA79964406701_102024-F.webp" },
+  { id: "CG001", categoria: "Computadores Gamers", nombre: "PC Gamer ASUS ROG Strix", precio: 1299990, descripcion: "Potente equipo para gamers...", imagen: "assets/image/Asus Rog Strix Scar 15 Gaming Laptop-15.6.jpg" },
+  { id: "SG001", categoria: "Sillas Gamers", nombre: "Silla Gamer Secretlab Titan", precio: 349990, descripcion: "Soporte ergonómico y personalización...", imagen: "assets/image/Secretlab Titan Evo Frost -Silla Gamer.jpg" },
+  { id: "MS001", categoria: "Mouse", nombre: "Mouse Gamer Logitech G502 HERO", precio: 49990, descripcion: "Sensor de alta precisión...", imagen: "assets/image/Mouse Gamer Logitech G502 HERO.webp" },
+  { id: "MP001", categoria: "Mousepad", nombre: "Mousepad Razer Goliathus Extended Chroma", precio: 29990, descripcion: "Área de juego amplia con RGB...", imagen: "assets/image/Mousepad Razer Goliathus Extended Chroma.webp" },
+  { id: "PP001", categoria: "Poleras Personalizadas", nombre: "Polera Gamer Personalizada 'Level-Up'", precio: 14990, descripcion: "Camiseta cómoda y estilizada...", imagen: "assets/image/PoleraLevelUP.jpg" },
+  { id: "PGP001", categoria: "Polerones Gamers Personalizados", nombre: "Polerón Gamer Level-Up", precio: 24990, descripcion: "Polerón personalizado...", imagen: "assets/image/poleron.jpg" },
+  { id: "ST001", categoria: "Servicio Técnico", nombre: "Servicio Técnico Express", precio: 10000, descripcion: "Reparación y mantención de consolas y PC gamers.", imagen: "assets/image/servicio_tecnico.jpg" }
+];
+
+// =============== USUARIOS Y SESIÓN ==============
+let users = JSON.parse(localStorage.getItem('users')) || [];
+let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+let usuarioActivo = JSON.parse(localStorage.getItem('usuarioActivo')) || null;
+
+// =============== CATÁLOGO ==============
+function renderizarCatalogo(filtrados = productos) {
+  const contenedor = document.getElementById('catalogoProductos');
+  contenedor.innerHTML = '';
+  filtrados.forEach(prod => {
+    const reseñas = obtenerReseñas(prod.id);
+    const promedio = reseñas.length ? (reseñas.reduce((acc, r) => acc + r.rating, 0) / reseñas.length).toFixed(1) : '-';
+    contenedor.innerHTML += `
+      <div class="col-md-4">
+        <div class="card">
+          <img src="${prod.imagen}" class="card-img-top" alt="${prod.nombre}">
+          <div class="card-body">
+            <h5 class="card-title">${prod.nombre}</h5>
+            <p class="card-text texto-secundario">${prod.descripcion}</p>
+            <span class="badge bg-success mb-2">Promedio: ${promedio} ⭐ (${reseñas.length})</span>
+            <p class="card-text texto-accent">$${prod.precio.toLocaleString('es-CL')}</p>
+            <button class="btn btn-primary btn-comprar" data-id="${prod.id}" data-nombre="${prod.nombre}" data-precio="${prod.precio}" data-categoria="${prod.categoria}">Comprar</button>
+            <button class="btn btn-warning ms-2" onclick="abrirReseñaModal('${prod.id}')">Reseñar</button>
+            <button class="btn btn-info ms-2" onclick="compartirProducto('${prod.nombre}')"><i class="fas fa-share"></i> Compartir</button>
+            <div class="mt-2" style="font-size:0.9em;" id="resenas-${prod.id}"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    mostrarReseñas(prod.id);
+  });
+}
+
+// =============== FILTROS Y BÚSQUEDA ==============
+document.getElementById('busquedaInput').addEventListener('input', filtrarCatalogo);
+document.getElementById('categoriaFiltro').addEventListener('change', filtrarCatalogo);
+
+function filtrarCatalogo() {
+  const texto = document.getElementById('busquedaInput').value.toLowerCase();
+  const categoria = document.getElementById('categoriaFiltro').value;
+  const filtrados = productos.filter(p => 
+    (p.nombre.toLowerCase().includes(texto) || p.descripcion.toLowerCase().includes(texto)) &&
+    (categoria === '' || p.categoria === categoria)
+  );
+  renderizarCatalogo(filtrados);
+}
+
+// =============== CARRITO ==============
+function agregarAlCarrito(producto) {
+  const itemExistente = carrito.find(item => item.id === producto.id);
+  itemExistente ? itemExistente.cantidad++ : carrito.push({...producto, cantidad: 1});
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+  actualizarCarritoUI();
+}
+
+function vaciarCarrito() {
+  carrito = [];
+  localStorage.removeItem('carrito');
+  actualizarCarritoUI();
+}
+
+function modificarCantidad(id, cambio) {
+  const item = carrito.find(i => i.id === id);
+  if (!item) return;
+  item.cantidad += cambio;
+  if (item.cantidad < 1) item.cantidad = 1;
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+  actualizarCarritoUI();
+}
+
+function eliminarDelCarrito(productId) {
+  carrito = carrito.filter(item => item.id !== productId);
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+  actualizarCarritoUI();
+}
+
+function actualizarCarritoUI() {
+  const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+  document.getElementById('contadorCarrito').textContent = totalItems;
+  const carritoItems = document.getElementById('carritoItems');
+  const totalCarrito = document.getElementById('totalCarrito');
+  let html = '';
+  let total = 0;
+  carrito.forEach(item => {
+    const subtotal = item.precio * item.cantidad;
+    total += subtotal;
+    html += `
+      <div class="cart-item d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <h6>${item.nombre}</h6>
+          <small>Cantidad: 
+            <button onclick="modificarCantidad('${item.id}',-1)" class="btn btn-sm btn-secondary">-</button> 
+            ${item.cantidad}
+            <button onclick="modificarCantidad('${item.id}',1)" class="btn btn-sm btn-secondary">+</button>
+          </small>
+        </div>
+        <div>
+          <span>$${subtotal.toLocaleString('es-CL')}</span>
+          <button class="btn btn-sm btn-danger ms-2" onclick="eliminarDelCarrito('${item.id}')"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    `;
+  });
+
+  let descuentoDuoc = 0;
+  if (usuarioActivo && usuarioActivo.email.endsWith('@duoc.cl')) {
+    descuentoDuoc = 0.2;
+    html += `<div class="alert alert-success mt-3">Descuento Duoc 20% aplicado!</div>`;
+  }
+  let totalConDescuento = total;
+  if (descuentoDuoc) totalConDescuento = Math.round(total * (1 - descuentoDuoc));
+  carritoItems.innerHTML = html || '<p>El carrito está vacío</p>';
+  totalCarrito.textContent = totalConDescuento.toLocaleString('es-CL');
+}
+
+// =============== REGISTRO ==============
+document.getElementById('registroForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const fechaNacimiento = document.getElementById('fechaNacimiento').value;
+  const hoy = new Date();
+  const nacimiento = new Date(fechaNacimiento);
+  let edad = hoy.getFullYear() - nacimiento.getFullYear();
+  const m = hoy.getMonth() - nacimiento.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) edad--;
+  if (edad < 18) {
+    Swal.fire('Error', 'Debes ser mayor de 18 años para registrarte', 'error');
+    return;
+  }
+  const email = document.getElementById('emailRegistro').value;
+  const nombre = document.getElementById('nombreRegistro').value;
+  const codigoReferido = document.getElementById('codigoReferido').value;
+  const password = Math.random().toString(36).slice(-8);
+
+  if(users.find(u => u.email === email)){
+    Swal.fire('Error', 'El correo ya está registrado', 'error');
+    return false;
+  }
+  let puntos = 0;
+  if(codigoReferido){
+    let referido = users.find(u => u.email === codigoReferido);
+    if(referido){
+      referido.puntos = (referido.puntos || 0) + 100;
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+  }
+  users.push({email, password, nombre, carrito: [], registro: new Date().toISOString(), puntos, historial:[]});
+  localStorage.setItem('users', JSON.stringify(users));
+  Swal.fire('¡Registro exitoso!', `Revisa tu correo para la contraseña temporal: ${password}`, 'success');
+  bootstrap.Modal.getInstance(document.getElementById('registroModal')).hide();
+});
+
+// =============== LOGIN ==============
+document.getElementById('loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  users = JSON.parse(localStorage.getItem('users')) || [];
+  usuarioActivo = users.find(u => u.email === email && u.password === password);
+  if(!usuarioActivo){
+    Swal.fire('Error', 'Credenciales incorrectas', 'error');
+    return;
+  }
+  localStorage.setItem('usuarioActivo', JSON.stringify(usuarioActivo));
+  Swal.fire('Bienvenido', 'Has iniciado sesión', 'success');
+  bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+  mostrarBotonesSesion();
+  mostrarPerfilDatos();
+  mostrarRecomendaciones();
+});
+
+function mostrarBotonesSesion() {
+  document.getElementById('perfilBtn').style.display = usuarioActivo ? '' : 'none';
+  document.getElementById('logoutBtn').style.display = usuarioActivo ? '' : 'none';
+}
+function mostrarPerfilDatos() {
+  if (!usuarioActivo) return;
+  document.getElementById('perfilEmail').value = usuarioActivo.email;
+  document.getElementById('perfilNombre').value = usuarioActivo.nombre;
+  const puntos = usuarioActivo.puntos || 0;
+  const nivel = Math.floor(puntos / 500) + 1;
+  document.getElementById('perfilPuntos').innerHTML = `<strong>Puntos LevelUp:</strong> ${puntos} (Nivel ${nivel})`;
+}
+document.getElementById('logoutBtn').addEventListener('click', function() {
+  usuarioActivo = null;
+  localStorage.removeItem('usuarioActivo');
+  mostrarBotonesSesion();
+  document.getElementById('recomendacionesContainer').style.display = 'none';
+  Swal.fire('Sesión cerrada', '', 'info');
+});
+
+// =============== EDITAR PERFIL ==============
+document.getElementById('perfilForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const email = document.getElementById('perfilEmail').value;
+  const nombre = document.getElementById('perfilNombre').value;
+  usuarioActivo.email = email;
+  usuarioActivo.nombre = nombre;
+  localStorage.setItem('usuarioActivo', JSON.stringify(usuarioActivo));
+  users = JSON.parse(localStorage.getItem('users')) || [];
+  users = users.map(u => u.email === usuarioActivo.email ? usuarioActivo : u);
+  localStorage.setItem('users', JSON.stringify(users));
+  Swal.fire('Guardado', 'Perfil actualizado', 'success');
+  bootstrap.Modal.getInstance(document.getElementById('perfilModal')).hide();
+  mostrarPerfilDatos();
+});
+
+// =============== COMPRA Y RECOMENDACIONES ==============
+document.getElementById('finalizarCompraBtn').addEventListener('click', function(){
+  if (carrito.length === 0) {
+    Swal.fire('Error', 'El carrito está vacío', 'error');
+    return;
+  }
+  Swal.fire({
+    title: '¿Confirmar compra?',
+    text: `Total: $${document.getElementById('totalCarrito').textContent}`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: '¡Comprar!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire('¡Éxito!', 'Compra realizada', 'success');
+      // guardar historial
+      if(usuarioActivo){
+        usuarioActivo.historial = usuarioActivo.historial || [];
+        usuarioActivo.historial.push(...carrito);
+        localStorage.setItem('usuarioActivo', JSON.stringify(usuarioActivo));
+        users = users.map(u => u.email === usuarioActivo.email ? usuarioActivo : u);
+        localStorage.setItem('users', JSON.stringify(users));
+        mostrarRecomendaciones();
+      }
+      vaciarCarrito();
+      bootstrap.Modal.getInstance(document.getElementById('carritoModal')).hide();
+    }
+  });
+});
+
+// =============== RECOMENDACIONES ==============
+function mostrarRecomendaciones() {
+  if (!usuarioActivo || !usuarioActivo.historial || usuarioActivo.historial.length === 0) {
+    document.getElementById('recomendacionesContainer').style.display = 'none';
+    return;
+  }
+  const categoriasCompradas = usuarioActivo.historial.map(p => p.categoria);
+  const sugeridos = productos.filter(p => categoriasCompradas.includes(p.categoria));
+  const cont = document.getElementById('recomendacionesProductos');
+  cont.innerHTML = '';
+  sugeridos.forEach(prod => {
+    cont.innerHTML += `
+      <div class="col-md-3">
+        <div class="card">
+          <img src="${prod.imagen}" class="card-img-top" alt="${prod.nombre}">
+          <div class="card-body">
+            <h6 class="card-title">${prod.nombre}</h6>
+            <p class="card-text texto-secundario">${prod.descripcion}</p>
+            <button class="btn btn-primary btn-comprar" data-id="${prod.id}" data-nombre="${prod.nombre}" data-precio="${prod.precio}" data-categoria="${prod.categoria}">Comprar</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById('recomendacionesContainer').style.display = '';
+}
+
+// =============== RESEÑAS Y CALIFICACIONES ==============
+function abrirReseñaModal(productoId) {
+  localStorage.setItem('reseñaProductoId', productoId);
+  bootstrap.Modal.getOrCreateInstance(document.getElementById('reseñaModal')).show();
+}
+document.getElementById('reseñaForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const productoId = localStorage.getItem('reseñaProductoId');
+  const rating = parseInt(document.getElementById('reseñaRating').value);
+  const texto = document.getElementById('reseñaTexto').value;
+  dejarReseña(productoId, texto, rating);
+  bootstrap.Modal.getInstance(document.getElementById('reseñaModal')).hide();
+  mostrarReseñas(productoId);
+  Swal.fire('¡Gracias!', 'Tu reseña ha sido registrada.', 'success');
+});
+
+function dejarReseña(productoId, texto, rating) {
+  let reseñas = JSON.parse(localStorage.getItem('reseñas')) || {};
+  if (!reseñas[productoId]) reseñas[productoId] = [];
+  reseñas[productoId].push({usuario: usuarioActivo ? usuarioActivo.email : 'anónimo', texto, rating});
+  localStorage.setItem('reseñas', JSON.stringify(reseñas));
+}
+
+function obtenerReseñas(productoId) {
+  let reseñas = JSON.parse(localStorage.getItem('reseñas')) || {};
+  return reseñas[productoId] || [];
+}
+
+function mostrarReseñas(productoId) {
+  const reseñas = obtenerReseñas(productoId);
+  let html = '';
+  reseñas.forEach(r => {
+    html += `<div class="mb-1"><span class="badge bg-secondary">${r.usuario}</span> <span class="text-warning">${r.rating}⭐</span> <span>${r.texto}</span></div>`;
+  });
+  document.getElementById(`resenas-${productoId}`).innerHTML = html;
+}
+
+// =============== COMPARTIR PRODUCTO ==============
+function compartirProducto(nombre) {
+  const url = window.location.href;
+  const texto = `¡Mira este producto gamer: ${nombre} en Level-Up Gamer! ${url}`;
+  const whatsapp = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+  window.open(whatsapp, '_blank');
+}
+
+// =============== EVENTOS Y PRODUCTOS DINÁMICOS ==============
+document.addEventListener('DOMContentLoaded', () => {
+  renderizarCatalogo();
+  actualizarCarritoUI();
+  mostrarBotonesSesion();
+  mostrarPerfilDatos();
+  mostrarRecomendaciones();
+  document.getElementById('vaciarCarritoBtn').addEventListener('click', vaciarCarrito);
+  // Mapa eventos gamer
+  const map = L.map('map').setView([-33.45694, -70.64827], 13);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+  L.marker([-33.45694, -70.64827]).addTo(map).bindPopup('Torneo FIFA 2025<br>25 Septiembre').openPopup();
+  L.marker([-33.4372, -70.6506]).addTo(map).bindPopup('Expo Gamer Santiago<br>18 Octubre');
+  document.addEventListener('click', function(e){
+    if(e.target.classList.contains('btn-comprar')){
+      const producto = {
+        id: e.target.dataset.id,
+        nombre: e.target.dataset.nombre,
+        precio: parseInt(e.target.dataset.precio),
+        categoria: e.target.dataset.categoria
+      };
+      agregarAlCarrito(producto);
+      Swal.fire('¡Agregado!', `${producto.nombre} se añadió al carrito`, 'success');
+    }
+  });
+});
